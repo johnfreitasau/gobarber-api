@@ -3,7 +3,7 @@ import { getCustomRepository } from 'typeorm';
 import '@modules/appointments/infra/http/routes/appointments.routes';
 import AppError from '@shared/errors/AppError';
 import Appointment from '@modules/appointments/infra/typeorm/entities/Appointment';
-import AppointmentsRepository from '../repositories/AppointmentsRepository';
+import AppointmentsRepository from '@modules/appointments/infra/repositories/AppointmentsRepository';
 
 interface Request {
   provider_id: string;
@@ -28,8 +28,6 @@ class CreateAppointmentService {
       provider_id,
       date: appointmentDate,
     });
-
-    await appointmentsRepository.save(appointment);
 
     return appointment;
   }
