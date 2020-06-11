@@ -3,7 +3,7 @@ import { getRepository, Repository, EntityRepository } from 'typeorm';
 import Appointment from '@modules/appointments/infra/typeorm/entities/Appointment';
 
 import IAppointmentsRepository from '@modules/appointments/repositories/IAppointmentsRepository';
-import ICreateAppointmentsDTO from '../../dtos/ICreateAppointmentsDTO';
+import ICreateAppointmentsDTO from '../../../dtos/ICreateAppointmentsDTO';
 
 @EntityRepository(Appointment)
 class AppointmentsRepository implements IAppointmentsRepository {
