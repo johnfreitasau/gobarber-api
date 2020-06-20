@@ -1,11 +1,5 @@
 import FakeUsersRepository from '@modules/users/repositories/fakes/FakeUsersRepository';
-// import CreateUserService from '@modules/users/services/CreateUserService';
-// import AppError from '@shared/errors/AppError';
-// import IStorageProvider from '@shared/container/providers/StorageProvider/models/IStorageProvider';
-// import DiskStorageProvider from '@shared/container/providers/StorageProvider/implementations/DiskStorageProvider';
 import FakeStorageProvider from '@shared/container/providers/StorageProvider/fakes/FakeStorageProvider';
-// import AuthenticateUserService from './AuthenticateUserService';
-// import FakeHashProvider from '../providers/fakes/FakeHashProvider';
 import AppError from '@shared/errors/AppError';
 
 import UpdateUserAvatarService from './UpdateUserAvatarService';
@@ -43,7 +37,7 @@ describe('UpdateUserAvatar', () => {
       fakeStorageProvider,
     );
 
-    expect(
+    await expect(
       updateUserAvatar.execute({
         user_id: 'non-existing-user',
         avatarFilename: 'avatar.jpg', // it doesn't need to exist.
