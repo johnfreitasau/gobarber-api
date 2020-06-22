@@ -3,6 +3,7 @@ import { injectable, inject } from 'tsyringe';
 //  import AppError from '@shared/errors/AppError';
 // import IMailProvider from '@shared/container/providers/MailProvider/models/IMailProvider';
 // import AppError from '@shared/errors/AppError';
+import { isAfter, addHours } from 'date-fns';
 import AppError from '@shared/errors/AppError';
 import IUsersRepository from '../repositories/IUsersRepository';
 import IUserTokensRepository from '../repositories/IUserTokensRepository';
@@ -37,6 +38,15 @@ class ResetPasswordService {
 
     if (!user) {
       throw new AppError('User not found.');
+    }
+
+    const tokenCreatedDate = userToken.created_at;
+    const compareDate = addHours(tokenCreatedDate, 2);
+
+    if (isAfter(Date.now(), compareDate)) {
+      throw new AppError(
+        'Email token has been expired. Please try to reset again.',
+      );
     }
 
     user.password = await this.userHashProvider.generateHash(password);

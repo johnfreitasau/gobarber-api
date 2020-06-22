@@ -1,5 +1,6 @@
 import FakeUsersRepository from '@modules/users/repositories/fakes/FakeUsersRepository';
 import FakeUserTokensRepository from '@modules/users/repositories/fakes/FakeUserTokensRepository';
+import AppError from '@shared/errors/AppError';
 import ResetPasswordService from './ResetPasswordService';
 import FakeHashProvider from '../providers/fakes/FakeHashProvider';
 
@@ -37,5 +38,47 @@ describe('ResetPassword', () => {
 
     expect(generateHash).toHaveBeenCalledWith('112233');
     expect(updatedUser?.password).toBe('112233');
+  });
+
+  it('Should not be able to reset the password for a unknown token.', async () => {
+    await expect(
+      resetPasswordService.execute({
+        token: 'token-12345678',
+        password: '112233',
+      }),
+    ).rejects.toBeInstanceOf(AppError);
+  });
+
+  it('Should not be able to reset the password for a unknown user.', async () => {
+    const { token } = await fakeUserTokensRepository.generate('unknown-user');
+
+    await expect(
+      resetPasswordService.execute({ token, password: '112233' }),
+    ).rejects.toBeInstanceOf(AppError);
+  });
+
+  it('Should not be able to reset the password after 2 hours.', async () => {
+    const user = await fakeUsersRepository.create({
+      name: 'John Doe',
+      email: 'john.doe@gmail.com',
+      password: '12345',
+    });
+
+    const { token } = await fakeUserTokensRepository.generate(user.id);
+
+    jest.spyOn(Date, 'now').mockImplementationOnce(() => {
+      const customDate = new Date();
+      return customDate.setHours(customDate.getHours() + 3);
+    });
+
+    // const generateHash = jest.spyOn(fakeHashProvider, 'generateHash');
+    await expect(
+      resetPasswordService.execute({ token, password: '112233' }),
+    ).rejects.toBeInstanceOf(AppError);
+
+    // const updatedUser = await fakeUsersRepository.findById(user.id);
+
+    // expect(generateHash).toHaveBeenCalledWith('112233');
+    // expect(updatedUser?.password).toBe('112233');
   });
 });
