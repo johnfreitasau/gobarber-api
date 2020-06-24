@@ -75,10 +75,5 @@ describe('ResetPassword', () => {
     await expect(
       resetPasswordService.execute({ token, password: '112233' }),
     ).rejects.toBeInstanceOf(AppError);
-
-    // const updatedUser = await fakeUsersRepository.findById(user.id);
-
-    // expect(generateHash).toHaveBeenCalledWith('112233');
-    // expect(updatedUser?.password).toBe('112233');
   });
 });

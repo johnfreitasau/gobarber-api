@@ -19,11 +19,11 @@ export default class EtherealMailProvider implements IMailProvider {
     });
   }
 
-  public async sendEmail(to: string, body: string): Promise<void> {
+  public async sendMail(to: string, body: string): Promise<void> {
     const message = await this.client.sendMail({
       from: 'GoBarber Team <team@gobarber.com.au>',
       to,
-      subject: 'Password recover',
+      subject: 'Password recovery',
       text: body,
     });
 

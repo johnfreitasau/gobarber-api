@@ -5,10 +5,10 @@ interface IMessage {
   body: string;
 }
 
-export default class FakeEmailProvider implements IMailProvider {
+export default class FakeMailProvider implements IMailProvider {
   private messages: IMessage[] = [];
 
-  public async sendEmail(to: string, body: string): Promise<void> {
+  public async sendMail(to: string, body: string): Promise<void> {
     this.messages.push({
       to,
       body,
