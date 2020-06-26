@@ -4,16 +4,21 @@ import AppError from '@shared/errors/AppError';
 
 import UpdateUserAvatarService from './UpdateUserAvatarService';
 
-describe('UpdateUserAvatar', () => {
-  it('It should be able to update the Avatar', async () => {
-    const fakeUsersRepository = new FakeUsersRepository();
-    const fakeStorageProvider = new FakeStorageProvider();
+let fakeUsersRepository: FakeUsersRepository;
+let fakeStorageProvider: FakeStorageProvider;
+let updateUserAvatar: UpdateUserAvatarService;
 
-    const updateUserAvatar = new UpdateUserAvatarService(
+describe('UpdateUserAvatar', () => {
+  beforeEach(() => {
+    fakeUsersRepository = new FakeUsersRepository();
+    fakeStorageProvider = new FakeStorageProvider();
+
+    updateUserAvatar = new UpdateUserAvatarService(
       fakeUsersRepository,
       fakeStorageProvider,
     );
-
+  });
+  it('It should be able to update the Avatar', async () => {
     const user = await fakeUsersRepository.create({
       name: 'John Doe',
       email: 'john.doe@gmail.com',
@@ -29,14 +34,6 @@ describe('UpdateUserAvatar', () => {
   });
 
   it('It should not allow non authenticated users to change Avatar', async () => {
-    const fakeUsersRepository = new FakeUsersRepository();
-    const fakeStorageProvider = new FakeStorageProvider();
-
-    const updateUserAvatar = new UpdateUserAvatarService(
-      fakeUsersRepository,
-      fakeStorageProvider,
-    );
-
     await expect(
       updateUserAvatar.execute({
         user_id: 'non-existing-user',
@@ -46,15 +43,7 @@ describe('UpdateUserAvatar', () => {
   });
 
   it('It should delete old avatar when updating a new one', async () => {
-    const fakeUsersRepository = new FakeUsersRepository();
-    const fakeStorageProvider = new FakeStorageProvider();
-
     const deleteFile = jest.spyOn(fakeStorageProvider, 'deleteFile');
-
-    const updateUserAvatar = new UpdateUserAvatarService(
-      fakeUsersRepository,
-      fakeStorageProvider,
-    );
 
     const user = await fakeUsersRepository.create({
       name: 'John Doe',
