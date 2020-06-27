@@ -28,7 +28,7 @@ class UpdateProfile {
     email,
     password,
     oldPassword,
-  }: IRequest): Promise<User | undefined> {
+  }: IRequest): Promise<User> {
     const user = await this.usersRepository.findById(user_id);
 
     if (!user) {
