@@ -35,64 +35,34 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-var typeorm_1 = require("typeorm");
-var CreateAppointments1588232206402 = /** @class */ (function () {
-    function CreateAppointments1588232206402() {
+var handlebars_1 = __importDefault(require("handlebars"));
+var fs_1 = __importDefault(require("fs"));
+var HandlebarsMailTemplateProvider = /** @class */ (function () {
+    function HandlebarsMailTemplateProvider() {
     }
-    CreateAppointments1588232206402.prototype.up = function (queryRunner) {
+    HandlebarsMailTemplateProvider.prototype.parse = function (_a) {
+        var file = _a.file, variables = _a.variables;
         return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, queryRunner.createTable(new typeorm_1.Table({
-                            name: 'appointments',
-                            columns: [
-                                {
-                                    name: 'id',
-                                    type: 'uuid',
-                                    isPrimary: true,
-                                    generationStrategy: 'uuid',
-                                    default: 'uuid_generate_v4()',
-                                },
-                                {
-                                    name: 'provider',
-                                    type: 'varchar',
-                                },
-                                {
-                                    name: 'date',
-                                    type: 'timestamp with time zone',
-                                },
-                                {
-                                    name: 'created_at',
-                                    type: 'timestamp with time zone',
-                                    default: 'now()',
-                                },
-                                {
-                                    name: 'updated_at',
-                                    type: 'timestamp with time zone',
-                                    default: 'now()',
-                                },
-                            ],
-                        }))];
+            var templateFileContent, parseTemplate;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0: return [4 /*yield*/, fs_1.default.promises.readFile(file, {
+                            encoding: 'utf-8',
+                        })];
                     case 1:
-                        _a.sent();
-                        return [2 /*return*/];
+                        templateFileContent = _b.sent();
+                        return [4 /*yield*/, handlebars_1.default.compile(templateFileContent)];
+                    case 2:
+                        parseTemplate = _b.sent();
+                        return [2 /*return*/, parseTemplate(variables)];
                 }
             });
         });
     };
-    CreateAppointments1588232206402.prototype.down = function (queryRunner) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, queryRunner.dropTable('appointments')];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
-            });
-        });
-    };
-    return CreateAppointments1588232206402;
+    return HandlebarsMailTemplateProvider;
 }());
-exports.default = CreateAppointments1588232206402;
+exports.default = HandlebarsMailTemplateProvider;

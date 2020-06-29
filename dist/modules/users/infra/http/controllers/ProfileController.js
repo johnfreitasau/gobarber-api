@@ -35,64 +35,57 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-var typeorm_1 = require("typeorm");
-var CreateAppointments1588232206402 = /** @class */ (function () {
-    function CreateAppointments1588232206402() {
+var tsyringe_1 = require("tsyringe");
+var UpdateProfileService_1 = __importDefault(require("@modules/users/services/UpdateProfileService"));
+var ShowProfileService_1 = __importDefault(require("@modules/users/services/ShowProfileService"));
+var ProfileController = /** @class */ (function () {
+    function ProfileController() {
     }
-    CreateAppointments1588232206402.prototype.up = function (queryRunner) {
+    ProfileController.prototype.show = function (request, response) {
         return __awaiter(this, void 0, void 0, function () {
+            var user_id, showProfile, user;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, queryRunner.createTable(new typeorm_1.Table({
-                            name: 'appointments',
-                            columns: [
-                                {
-                                    name: 'id',
-                                    type: 'uuid',
-                                    isPrimary: true,
-                                    generationStrategy: 'uuid',
-                                    default: 'uuid_generate_v4()',
-                                },
-                                {
-                                    name: 'provider',
-                                    type: 'varchar',
-                                },
-                                {
-                                    name: 'date',
-                                    type: 'timestamp with time zone',
-                                },
-                                {
-                                    name: 'created_at',
-                                    type: 'timestamp with time zone',
-                                    default: 'now()',
-                                },
-                                {
-                                    name: 'updated_at',
-                                    type: 'timestamp with time zone',
-                                    default: 'now()',
-                                },
-                            ],
-                        }))];
+                    case 0:
+                        user_id = request.user.id;
+                        showProfile = tsyringe_1.container.resolve(ShowProfileService_1.default);
+                        return [4 /*yield*/, showProfile.execute({ user_id: user_id })];
                     case 1:
-                        _a.sent();
-                        return [2 /*return*/];
+                        user = _a.sent();
+                        delete user.password;
+                        return [2 /*return*/, response.json(user)];
                 }
             });
         });
     };
-    CreateAppointments1588232206402.prototype.down = function (queryRunner) {
+    ProfileController.prototype.update = function (request, response) {
         return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, queryRunner.dropTable('appointments')];
+            var user_id, _a, name, email, oldPassword, password, updateProfile, user;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        user_id = request.user.id;
+                        _a = request.body, name = _a.name, email = _a.email, oldPassword = _a.oldPassword, password = _a.password;
+                        updateProfile = tsyringe_1.container.resolve(UpdateProfileService_1.default);
+                        return [4 /*yield*/, updateProfile.execute({
+                                user_id: user_id,
+                                name: name,
+                                email: email,
+                                oldPassword: oldPassword,
+                                password: password,
+                            })];
                     case 1:
-                        _a.sent();
-                        return [2 /*return*/];
+                        user = _b.sent();
+                        delete user.password;
+                        return [2 /*return*/, response.json(user)];
                 }
             });
         });
     };
-    return CreateAppointments1588232206402;
+    return ProfileController;
 }());
-exports.default = CreateAppointments1588232206402;
+exports.default = ProfileController;

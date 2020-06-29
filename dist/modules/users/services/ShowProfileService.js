@@ -1,4 +1,16 @@
 "use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -35,64 +47,38 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-var typeorm_1 = require("typeorm");
-var CreateAppointments1588232206402 = /** @class */ (function () {
-    function CreateAppointments1588232206402() {
+var tsyringe_1 = require("tsyringe");
+var AppError_1 = __importDefault(require("@shared/errors/AppError"));
+var UpdateProfileService = /** @class */ (function () {
+    function UpdateProfileService(usersRepository) {
+        this.usersRepository = usersRepository;
     }
-    CreateAppointments1588232206402.prototype.up = function (queryRunner) {
+    UpdateProfileService.prototype.execute = function (_a) {
+        var user_id = _a.user_id;
         return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, queryRunner.createTable(new typeorm_1.Table({
-                            name: 'appointments',
-                            columns: [
-                                {
-                                    name: 'id',
-                                    type: 'uuid',
-                                    isPrimary: true,
-                                    generationStrategy: 'uuid',
-                                    default: 'uuid_generate_v4()',
-                                },
-                                {
-                                    name: 'provider',
-                                    type: 'varchar',
-                                },
-                                {
-                                    name: 'date',
-                                    type: 'timestamp with time zone',
-                                },
-                                {
-                                    name: 'created_at',
-                                    type: 'timestamp with time zone',
-                                    default: 'now()',
-                                },
-                                {
-                                    name: 'updated_at',
-                                    type: 'timestamp with time zone',
-                                    default: 'now()',
-                                },
-                            ],
-                        }))];
+            var user;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0: return [4 /*yield*/, this.usersRepository.findById(user_id)];
                     case 1:
-                        _a.sent();
-                        return [2 /*return*/];
+                        user = _b.sent();
+                        if (!user) {
+                            throw new AppError_1.default('User not found.');
+                        }
+                        return [2 /*return*/, user];
                 }
             });
         });
     };
-    CreateAppointments1588232206402.prototype.down = function (queryRunner) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, queryRunner.dropTable('appointments')];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
-            });
-        });
-    };
-    return CreateAppointments1588232206402;
+    UpdateProfileService = __decorate([
+        tsyringe_1.injectable(),
+        __param(0, tsyringe_1.inject('UsersRepository')),
+        __metadata("design:paramtypes", [Object])
+    ], UpdateProfileService);
+    return UpdateProfileService;
 }());
-exports.default = CreateAppointments1588232206402;
+exports.default = UpdateProfileService;

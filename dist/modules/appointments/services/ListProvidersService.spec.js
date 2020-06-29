@@ -40,20 +40,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var FakeUsersRepository_1 = __importDefault(require("@modules/users/repositories/fakes/FakeUsersRepository"));
-var FakeStorageProvider_1 = __importDefault(require("@shared/container/providers/StorageProvider/fakes/FakeStorageProvider"));
-var AppError_1 = __importDefault(require("@shared/errors/AppError"));
-var UpdateUserAvatarService_1 = __importDefault(require("./UpdateUserAvatarService"));
+var ListProvidersService_1 = __importDefault(require("./ListProvidersService"));
 var fakeUsersRepository;
-var fakeStorageProvider;
-var updateUserAvatar;
-describe('UpdateUserAvatar', function () {
+var listProviders;
+describe('showProfile', function () {
     beforeEach(function () {
         fakeUsersRepository = new FakeUsersRepository_1.default();
-        fakeStorageProvider = new FakeStorageProvider_1.default();
-        updateUserAvatar = new UpdateUserAvatarService_1.default(fakeUsersRepository, fakeStorageProvider);
+        listProviders = new ListProvidersService_1.default(fakeUsersRepository);
     });
-    it('It should be able to update the Avatar', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var user;
+    it('should be able to list the providers', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var provider1, provider2, loggedUser, providers;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, fakeUsersRepository.create({
@@ -62,58 +58,27 @@ describe('UpdateUserAvatar', function () {
                         password: '12345',
                     })];
                 case 1:
-                    user = _a.sent();
-                    return [4 /*yield*/, updateUserAvatar.execute({
-                            user_id: user.id,
-                            avatarFilename: 'avatar.jpg',
-                        })];
-                case 2:
-                    _a.sent();
-                    expect(user.avatar).toBe('avatar.jpg');
-                    return [2 /*return*/];
-            }
-        });
-    }); });
-    it('It should not allow non authenticated users to change Avatar', function () { return __awaiter(void 0, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, expect(updateUserAvatar.execute({
-                        user_id: 'non-existing-user',
-                        avatarFilename: 'avatar.jpg',
-                    })).rejects.toBeInstanceOf(AppError_1.default)];
-                case 1:
-                    _a.sent();
-                    return [2 /*return*/];
-            }
-        });
-    }); });
-    it('It should delete old avatar when updating a new one', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var deleteFile, user;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    deleteFile = jest.spyOn(fakeStorageProvider, 'deleteFile');
+                    provider1 = _a.sent();
                     return [4 /*yield*/, fakeUsersRepository.create({
-                            name: 'John Doe',
-                            email: 'john.doe@gmail.com',
+                            name: 'John Fre',
+                            email: 'john.fre@gmail.com',
                             password: '12345',
                         })];
-                case 1:
-                    user = _a.sent();
-                    return [4 /*yield*/, updateUserAvatar.execute({
-                            user_id: user.id,
-                            avatarFilename: 'avatar.jpg',
-                        })];
                 case 2:
-                    _a.sent();
-                    return [4 /*yield*/, updateUserAvatar.execute({
-                            user_id: user.id,
-                            avatarFilename: 'avatar2.jpg',
+                    provider2 = _a.sent();
+                    return [4 /*yield*/, fakeUsersRepository.create({
+                            name: 'John Cam',
+                            email: 'john.cam@gmail.com',
+                            password: '12345',
                         })];
                 case 3:
-                    _a.sent();
-                    expect(deleteFile).toHaveBeenCalledWith('avatar.jpg');
-                    expect(user.avatar).toBe('avatar2.jpg');
+                    loggedUser = _a.sent();
+                    return [4 /*yield*/, listProviders.execute({
+                            user_id: loggedUser.id,
+                        })];
+                case 4:
+                    providers = _a.sent();
+                    expect(providers).toEqual([provider1, provider2]);
                     return [2 /*return*/];
             }
         });

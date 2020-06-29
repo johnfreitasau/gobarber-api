@@ -45,6 +45,18 @@ var FakeUsersRepository = /** @class */ (function () {
     function FakeUsersRepository() {
         this.users = [];
     }
+    FakeUsersRepository.prototype.findAllProviders = function (data) {
+        return __awaiter(this, void 0, void 0, function () {
+            var users;
+            return __generator(this, function (_a) {
+                users = this.users;
+                if (users) {
+                    users = this.users.filter(function (user) { return user.id !== (data === null || data === void 0 ? void 0 : data.expect_user_id); });
+                }
+                return [2 /*return*/, users];
+            });
+        });
+    };
     FakeUsersRepository.prototype.findById = function (id) {
         return __awaiter(this, void 0, void 0, function () {
             var findUser;

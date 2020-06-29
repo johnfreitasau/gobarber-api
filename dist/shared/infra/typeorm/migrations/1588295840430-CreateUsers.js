@@ -69,12 +69,12 @@ var CreateUsers1588295840430 = /** @class */ (function () {
                                 },
                                 {
                                     name: 'created_at',
-                                    type: 'timestamp',
+                                    type: 'timestamp with time zone',
                                     default: 'now()',
                                 },
                                 {
                                     name: 'updated_at',
-                                    type: 'timestamp',
+                                    type: 'timestamp with time zone',
                                     default: 'now()',
                                 },
                             ],

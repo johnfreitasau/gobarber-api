@@ -35,64 +35,52 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-var typeorm_1 = require("typeorm");
-var CreateAppointments1588232206402 = /** @class */ (function () {
-    function CreateAppointments1588232206402() {
-    }
-    CreateAppointments1588232206402.prototype.up = function (queryRunner) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, queryRunner.createTable(new typeorm_1.Table({
-                            name: 'appointments',
-                            columns: [
-                                {
-                                    name: 'id',
-                                    type: 'uuid',
-                                    isPrimary: true,
-                                    generationStrategy: 'uuid',
-                                    default: 'uuid_generate_v4()',
-                                },
-                                {
-                                    name: 'provider',
-                                    type: 'varchar',
-                                },
-                                {
-                                    name: 'date',
-                                    type: 'timestamp with time zone',
-                                },
-                                {
-                                    name: 'created_at',
-                                    type: 'timestamp with time zone',
-                                    default: 'now()',
-                                },
-                                {
-                                    name: 'updated_at',
-                                    type: 'timestamp with time zone',
-                                    default: 'now()',
-                                },
-                            ],
-                        }))];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
-            });
+var FakeUsersRepository_1 = __importDefault(require("@modules/users/repositories/fakes/FakeUsersRepository"));
+var AppError_1 = __importDefault(require("@shared/errors/AppError"));
+var ShowProfileService_1 = __importDefault(require("./ShowProfileService"));
+var fakeUsersRepository;
+var showProfile;
+describe('showProfile', function () {
+    beforeEach(function () {
+        fakeUsersRepository = new FakeUsersRepository_1.default();
+        showProfile = new ShowProfileService_1.default(fakeUsersRepository);
+    });
+    it('should be able to show the profile', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var user, profile;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, fakeUsersRepository.create({
+                        name: 'John Doe',
+                        email: 'john.doe@gmail.com',
+                        password: '12345',
+                    })];
+                case 1:
+                    user = _a.sent();
+                    return [4 /*yield*/, showProfile.execute({
+                            user_id: user.id,
+                        })];
+                case 2:
+                    profile = _a.sent();
+                    expect(profile.name).toBe('John Doe');
+                    expect(profile.email).toBe('john.doe@gmail.com');
+                    return [2 /*return*/];
+            }
         });
-    };
-    CreateAppointments1588232206402.prototype.down = function (queryRunner) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, queryRunner.dropTable('appointments')];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
-            });
+    }); });
+    it('should not show the profile for a non-existing user', function () { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, expect(showProfile.execute({
+                        user_id: 'non-existing-ID',
+                    })).rejects.toBeInstanceOf(AppError_1.default)];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
         });
-    };
-    return CreateAppointments1588232206402;
-}());
-exports.default = CreateAppointments1588232206402;
+    }); });
+});

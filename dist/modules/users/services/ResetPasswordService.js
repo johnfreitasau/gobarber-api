@@ -84,6 +84,12 @@ var ResetPasswordService = /** @class */ (function () {
                         }
                         tokenCreatedDate = userToken.created_at;
                         compareDate = date_fns_1.addHours(tokenCreatedDate, 2);
+                        console.log(tokenCreatedDate);
+                        console.log(compareDate);
+                        console.log(date_fns_1.isAfter(Date.now(), compareDate));
+                        console.log(new Date(Date.now()));
+                        console.log(userToken);
+                        console.log(user);
                         if (date_fns_1.isAfter(Date.now(), compareDate)) {
                             throw new AppError_1.default('Email token has been expired. Please try to reset again.');
                         }

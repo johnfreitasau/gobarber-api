@@ -52,60 +52,58 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var tsyringe_1 = require("tsyringe");
-var nodemailer_1 = __importDefault(require("nodemailer"));
-var EtherealMailProvider = /** @class */ (function () {
-    function EtherealMailProvider(mailTemplateProvider) {
-        var _this = this;
-        this.mailTemplateProvider = mailTemplateProvider;
-        nodemailer_1.default.createTestAccount().then(function (account) {
-            var transporter = nodemailer_1.default.createTransport({
-                host: account.smtp.host,
-                port: account.smtp.port,
-                secure: account.smtp.secure,
-                auth: {
-                    user: account.user,
-                    pass: account.pass,
-                },
-            });
-            _this.client = transporter;
-        });
+var AppError_1 = __importDefault(require("@shared/errors/AppError"));
+var UpdateProfile = /** @class */ (function () {
+    function UpdateProfile(usersRepository, hashProvider) {
+        this.usersRepository = usersRepository;
+        this.hashProvider = hashProvider;
     }
-    EtherealMailProvider.prototype.sendMail = function (_a) {
-        var to = _a.to, from = _a.from, subject = _a.subject, templateData = _a.templateData;
+    UpdateProfile.prototype.execute = function (_a) {
+        var user_id = _a.user_id, name = _a.name, email = _a.email, password = _a.password, oldPassword = _a.oldPassword;
         return __awaiter(this, void 0, void 0, function () {
-            var message, _b, _c, _d;
-            return __generator(this, function (_e) {
-                switch (_e.label) {
-                    case 0:
-                        _c = (_b = this.client).sendMail;
-                        _d = {
-                            from: {
-                                name: (from === null || from === void 0 ? void 0 : from.name) || 'GoBarber Team',
-                                address: (from === null || from === void 0 ? void 0 : from.email) || 'team@gobarber.com.au',
-                            },
-                            to: {
-                                name: to.name,
-                                address: to.email,
-                            },
-                            subject: subject
-                        };
-                        return [4 /*yield*/, this.mailTemplateProvider.parse(templateData)];
-                    case 1: return [4 /*yield*/, _c.apply(_b, [(_d.html = _e.sent(),
-                                _d)])];
+            var user, existedUser, checkOldPassword, _b;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
+                    case 0: return [4 /*yield*/, this.usersRepository.findById(user_id)];
+                    case 1:
+                        user = _c.sent();
+                        if (!user) {
+                            throw new AppError_1.default('User not found.');
+                        }
+                        return [4 /*yield*/, this.usersRepository.findByEmail(email)];
                     case 2:
-                        message = _e.sent();
-                        console.log('Message sent: %s', message.messageId);
-                        console.log('Preview URL: %s', nodemailer_1.default.getTestMessageUrl(message));
-                        return [2 /*return*/];
+                        existedUser = _c.sent();
+                        if (existedUser && existedUser.id !== user_id) {
+                            throw new AppError_1.default('This user already exists. Please choose a different one.');
+                        }
+                        user.name = name;
+                        user.email = email;
+                        if (password && !oldPassword) {
+                            throw new AppError_1.default('Old password is required.');
+                        }
+                        if (!(password && oldPassword)) return [3 /*break*/, 5];
+                        return [4 /*yield*/, this.hashProvider.compareHash(oldPassword, user.password)];
+                    case 3:
+                        checkOldPassword = _c.sent();
+                        if (!checkOldPassword) {
+                            throw new AppError_1.default('Old password is invalid.');
+                        }
+                        _b = user;
+                        return [4 /*yield*/, this.hashProvider.generateHash(password)];
+                    case 4:
+                        _b.password = _c.sent();
+                        _c.label = 5;
+                    case 5: return [2 /*return*/, this.usersRepository.save(user)];
                 }
             });
         });
     };
-    EtherealMailProvider = __decorate([
+    UpdateProfile = __decorate([
         tsyringe_1.injectable(),
-        __param(0, tsyringe_1.inject('MailTemplateProvider')),
-        __metadata("design:paramtypes", [Object])
-    ], EtherealMailProvider);
-    return EtherealMailProvider;
+        __param(0, tsyringe_1.inject('UsersRepository')),
+        __param(1, tsyringe_1.inject('HashProvider')),
+        __metadata("design:paramtypes", [Object, Object])
+    ], UpdateProfile);
+    return UpdateProfile;
 }());
-exports.default = EtherealMailProvider;
+exports.default = UpdateProfile;

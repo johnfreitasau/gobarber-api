@@ -44,21 +44,26 @@ var CreateUserService_1 = __importDefault(require("@modules/users/services/Creat
 var AppError_1 = __importDefault(require("@shared/errors/AppError"));
 var AuthenticateUserService_1 = __importDefault(require("./AuthenticateUserService"));
 var FakeHashProvider_1 = __importDefault(require("../providers/fakes/FakeHashProvider"));
+var fakeUsersRepository;
+var fakeHashProvider;
+var createUser;
+var authenticateUser;
 describe('AuthenticateUser', function () {
+    beforeEach(function () {
+        fakeUsersRepository = new FakeUsersRepository_1.default();
+        fakeHashProvider = new FakeHashProvider_1.default();
+        createUser = new CreateUserService_1.default(fakeUsersRepository, fakeHashProvider);
+        authenticateUser = new AuthenticateUserService_1.default(fakeUsersRepository, fakeHashProvider);
+    });
     it('should be able to authenticate', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var fakeUsersRepository, fakeHashProvider, createUser, authenticateUser, user, response;
+        var user, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0:
-                    fakeUsersRepository = new FakeUsersRepository_1.default();
-                    fakeHashProvider = new FakeHashProvider_1.default();
-                    createUser = new CreateUserService_1.default(fakeUsersRepository, fakeHashProvider);
-                    authenticateUser = new AuthenticateUserService_1.default(fakeUsersRepository, fakeHashProvider);
-                    return [4 /*yield*/, createUser.execute({
-                            name: 'John Doe',
-                            email: 'john.doe@gmail.com',
-                            password: '12345',
-                        })];
+                case 0: return [4 /*yield*/, createUser.execute({
+                        name: 'John Doe',
+                        email: 'john.doe@gmail.com',
+                        password: '12345',
+                    })];
                 case 1:
                     user = _a.sent();
                     return [4 /*yield*/, authenticateUser.execute({
@@ -74,17 +79,12 @@ describe('AuthenticateUser', function () {
         });
     }); });
     it('should not be able to authenticate using an non existing account.', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var fakeUsersRepository, fakeHashProvider, authenticateUser;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0:
-                    fakeUsersRepository = new FakeUsersRepository_1.default();
-                    fakeHashProvider = new FakeHashProvider_1.default();
-                    authenticateUser = new AuthenticateUserService_1.default(fakeUsersRepository, fakeHashProvider);
-                    return [4 /*yield*/, expect(authenticateUser.execute({
-                            email: 'johndoe@example.com',
-                            password: '12345',
-                        })).rejects.toBeInstanceOf(AppError_1.default)];
+                case 0: return [4 /*yield*/, expect(authenticateUser.execute({
+                        email: 'johndoe@example.com',
+                        password: '12345',
+                    })).rejects.toBeInstanceOf(AppError_1.default)];
                 case 1:
                     _a.sent();
                     return [2 /*return*/];
@@ -92,19 +92,13 @@ describe('AuthenticateUser', function () {
         });
     }); });
     it('It should not be able to authenticate using the wrong password', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var fakeUsersRepository, fakeHashProvider, createUser, authenticateUser;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0:
-                    fakeUsersRepository = new FakeUsersRepository_1.default();
-                    fakeHashProvider = new FakeHashProvider_1.default();
-                    createUser = new CreateUserService_1.default(fakeUsersRepository, fakeHashProvider);
-                    authenticateUser = new AuthenticateUserService_1.default(fakeUsersRepository, fakeHashProvider);
-                    return [4 /*yield*/, createUser.execute({
-                            name: 'John Doe',
-                            email: 'john.doe@gmail.com',
-                            password: '12345',
-                        })];
+                case 0: return [4 /*yield*/, createUser.execute({
+                        name: 'John Doe',
+                        email: 'john.doe@gmail.com',
+                        password: '12345',
+                    })];
                 case 1:
                     _a.sent();
                     return [4 /*yield*/, expect(authenticateUser.execute({
