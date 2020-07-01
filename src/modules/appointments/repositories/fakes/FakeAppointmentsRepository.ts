@@ -23,15 +23,11 @@ class AppointmentsRepository implements IAppointmentsRepository {
   }: IFindAllInMonthFromProviderDTO): Promise<Appointment[]> {
     const appointments = this.appointments.filter(appointment => {
       return (
-        appointment.id === provider_id &&
+        appointment.provider_id === provider_id &&
         getMonth(appointment.date) + 1 === month &&
         getYear(appointment.date) === year
       );
     });
-
-    console.log('<<< from FakeAppointmentRepository');
-    console.log(appointments);
-    console.log('>>> from FakeAppointmentRepository');
 
     return appointments;
   }
@@ -47,6 +43,10 @@ class AppointmentsRepository implements IAppointmentsRepository {
     this.appointments.push(appointment);
 
     return appointment;
+  }
+
+  public async listAllAppointmentsTest(): Promise<Appointment[]> {
+    return this.appointments;
   }
 }
 

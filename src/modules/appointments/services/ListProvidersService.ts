@@ -14,13 +14,9 @@ class ListProvidersService {
   ) {}
 
   public async execute({ user_id }: IRequest): Promise<User[]> {
-    // console.log('>>>Chamou o metodo execute dentro de ListProvidersService');
-
     const users = await this.usersRepository.findAllProviders({
       except_user_id: user_id,
     });
-    // console.log('>>>users dentro de ListProvidersService:');
-    // console.log(users);
     return users;
   }
 }
