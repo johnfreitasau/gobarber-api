@@ -65,10 +65,10 @@ class ListProviderMonthAvailabilityService {
       };
     });
 
-    const allAppointments = this.appointmentsRepository.listAllAppointmentsTest();
-    console.log('TEST: LIST ALL APPOINTMENTS:');
-    console.log(allAppointments);
-    console.log('TEST END');
+    // const allAppointments = this.appointmentsRepository.listAllAppointmentsTest();
+    // console.log('TEST: LIST ALL APPOINTMENTS:');
+    // console.log(allAppointments);
+    // console.log('TEST END');
 
     return availability;
   }
