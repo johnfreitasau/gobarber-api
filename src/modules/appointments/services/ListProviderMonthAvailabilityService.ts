@@ -51,24 +51,11 @@ class ListProviderMonthAvailabilityService {
       const appointmentInDay = appointments.filter(
         appointment => getDate(appointment.date) === day,
       );
-      console.log('<<<AppointmentInDay');
-      console.log(appointmentInDay);
-      console.log('>>>');
-
-      // return {
-      //   day,
-      //   available: appointmentInDay.length < 10,
-      // };
       return {
         day,
         available: appointmentInDay.length < 7,
       };
     });
-
-    // const allAppointments = this.appointmentsRepository.listAllAppointmentsTest();
-    // console.log('TEST: LIST ALL APPOINTMENTS:');
-    // console.log(allAppointments);
-    // console.log('TEST END');
 
     return availability;
   }
