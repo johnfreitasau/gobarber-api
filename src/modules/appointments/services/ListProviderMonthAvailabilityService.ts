@@ -1,11 +1,6 @@
-// import { startOfHour } from 'date-fns';
 import { injectable, inject } from 'tsyringe';
 import { getDaysInMonth, getDate } from 'date-fns';
-// import '@modules/appointments/infra/http/routes/appointments.routes';
-// import AppError from '@shared/errors/AppError';
-// import Appointment from '@modules/appointments/infra/typeorm/entities/Appointment';
 import IAppointmentsRepository from '../repositories/IAppointmentsRepository';
-// import AppointmentsRepository from '../infra/typeorm/repositories/AppointmentsRepository';
 
 interface IRequest {
   provider_id: string;

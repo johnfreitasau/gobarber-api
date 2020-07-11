@@ -1,7 +1,4 @@
-// import AppError from '@shared/errors/AppError';
 import FakeAppointmentsRepository from '@modules/appointments/repositories/fakes/FakeAppointmentsRepository';
-// import FakeUsersRepository from '@modules/users/repositories/fakes/FakeUsersRepository';
-// import { zonedTimeToUtc } from 'date-fns-tz';
 import ListProviderMonthAvailabilityService from './ListProviderMonthAvailabilityService';
 
 let fakeAppointmentsRepository: FakeAppointmentsRepository;
