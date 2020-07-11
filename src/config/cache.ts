@@ -15,7 +15,7 @@ export default {
     redis: {
       host: 'localhost',
       port: 6379,
-      password: null,
+      password: undefined,
     },
   },
-};
+} as ICacheConfig;
