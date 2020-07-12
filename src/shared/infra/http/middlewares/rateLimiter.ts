@@ -1,4 +1,4 @@
-import { Request, Response, nextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { RateLimiterRedis } from 'rate-limiter-flexible';
 import redis from 'redis';
 import AppError from '@shared/errors/AppError';
@@ -19,7 +19,7 @@ const limiter = new RateLimiterRedis({
 export default async function rateLimiter(
   request: Request,
   response: Response,
-  next: nextFunction,
+  next: NextFunction,
 ): Promise<void> {
   try {
     await limiter.consume(request.ip);
