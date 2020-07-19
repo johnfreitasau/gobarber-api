@@ -15,6 +15,9 @@ class UserTokensRepository implements IUserTokensRepository {
 
     await this.ormRepository.save(userToken);
 
+    console.log('From createToken:');
+    console.log(userToken.created_at);
+
     return userToken;
   }
 
@@ -22,6 +25,10 @@ class UserTokensRepository implements IUserTokensRepository {
     const userToken = await this.ormRepository.findOne({
       where: { token },
     });
+
+    console.log('From findByToken:');
+    console.log(userToken?.created_at);
+
     return userToken;
   }
 }

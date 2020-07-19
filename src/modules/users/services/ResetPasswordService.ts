@@ -1,9 +1,5 @@
 import { injectable, inject } from 'tsyringe';
-// import User from '@modules/users/infra/typeorm/entities/User';
-//  import AppError from '@shared/errors/AppError';
-// import IMailProvider from '@shared/container/providers/MailProvider/models/IMailProvider';
-// import AppError from '@shared/errors/AppError';
-import { isAfter, addHours } from 'date-fns';
+import { differenceInHours } from 'date-fns';
 import AppError from '@shared/errors/AppError';
 import IUsersRepository from '../repositories/IUsersRepository';
 import IUserTokensRepository from '../repositories/IUserTokensRepository';
@@ -31,22 +27,29 @@ class ResetPasswordService {
     const userToken = await this.userTokensRepository.findByToken(token);
 
     if (!userToken) {
-      throw new AppError('Token not found.');
+      throw new AppError('User token does not exist');
     }
 
     const user = await this.usersRepository.findById(userToken.user_id);
 
     if (!user) {
-      throw new AppError('User not found.');
+      throw new AppError('User does not exist');
     }
 
-    const tokenCreatedDate = userToken.created_at;
-    const compareDate = addHours(tokenCreatedDate, 2);
+    const tokenCreatedAt = userToken.created_at;
 
-    if (isAfter(Date.now(), compareDate)) {
-      throw new AppError(
-        'Email token has been expired. Please try to reset again.',
-      );
+    console.log(Date.now());
+    console.log(new Date(Date.now()));
+    console.log(tokenCreatedAt);
+    console.log(differenceInHours(Date.now(), tokenCreatedAt));
+    console.log(differenceInHours(Date.now(), tokenCreatedAt) > 2);
+
+    // if (differenceInHours(new Date(Date.now()), tokenCreatedAt) > 2) {
+    //   throw new AppError('Token expired');
+    // }
+
+    if (differenceInHours(new Date(), tokenCreatedAt) > 2) {
+      throw new AppError('Token expired');
     }
 
     user.password = await this.userHashProvider.generateHash(password);
