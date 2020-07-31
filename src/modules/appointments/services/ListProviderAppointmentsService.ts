@@ -43,7 +43,7 @@ class ListProviderAppointmentsService {
         },
       );
 
-      console.log('Buscou do banco.');
+      // console.log('Data retrieved from the DB.');
 
       await this.cacheProvider.save(cacheKey, classToClass(appointments));
     }
