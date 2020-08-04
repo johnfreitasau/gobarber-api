@@ -2,8 +2,8 @@
   "compilerOptions": {
     "target": "es5",
     "module": "commonjs",
-     "outDir": "./dist",
-     "rootDir": "./src",
+    "outDir": "./dist",
+    "rootDir": "./src",
     "strict": true,
     "strictPropertyInitialization": false,
     "baseUrl": "./src",
@@ -17,5 +17,10 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "forceConsistentCasingInFileNames": true
-  }
+  },
+  "exclude": [
+    "jest.config.js",
+    "prettier.config.js",
+    "./coverage"
+  ]
 }
