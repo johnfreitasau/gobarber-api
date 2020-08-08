@@ -36,8 +36,10 @@ jobs:
         username: ${{ secrets.SSH_USER }}
         port: ${{ secrets.SSH_PORT }}
         key: ${{secrets.SSH_KEY }}
-        source: "dist"
-        target: "test"
+        source: "."
+        target: "~/app/GoBarber_Backend"
+
+
 # Substituir o codigo existente na pasta "dist" pelo novo codigo
 # Executar "yarn" na Digital Ocean
 # Executar as migrations do TypeORM
