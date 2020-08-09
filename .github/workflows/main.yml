@@ -39,8 +39,8 @@ jobs:
         source: ".,!node_modules"
         target: "~/app/GoBarber_Backend"
 
-    # Run production scripts
-    - name: Install dependencies in Digital Ocean
+    # Roda yarn, migrations e reinicia o node
+    - name: Run production scripts - yarn, migrations and restart node
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.SSH_HOST }}
@@ -51,4 +51,4 @@ jobs:
           cd ~/app/GoBarber_Backend
           yarn
           ./node_modules/.bin/typeorm migration:run
-          script: pm2 restart gobarber-api
+          pm2 restart gobarber-api
