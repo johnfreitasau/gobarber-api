@@ -22,8 +22,10 @@
   <a href="https://github.com/johnfreitasau/gobarber-api/issues">
     <img alt="Repository issues" src="https://img.shields.io/github/issues/johnfreitasau/gobarber-api?color=%23FF9000">
   </a>
+  <a href="https://github.com/johnfreitasau/gobarber-api/blob/master/LICENSE">
+    <img alt="License" src="https://img.shields.io/badge/license-MIT-%23FF9000">
+  </a>
 
-  <img alt="GitHub" src="https://img.shields.io/github/license/johnfreitasau/gobarber-api?color=%23FF9000">
 </p>
 
 
